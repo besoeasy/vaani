@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
+    "get-ipfs-gateway": "github:besoeasy/get-ipfs-gateway",
     "pinia": "^2.1.7",
     "timeago.js": "^4.0.2",
     "vue": "^3.4.29",
