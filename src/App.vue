@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute, RouterLink, RouterView } from 'vue-router'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const route = useRoute()
 
@@ -26,7 +26,7 @@ onMounted(async () => {
         >
         <div class="flex items-center space-x-4">
           <div class="flex items-center space-x-4 text-sm md:space-x-8">
-            <a class="">*</a>
+            <a class="">$</a>
           </div>
         </div>
       </div>
