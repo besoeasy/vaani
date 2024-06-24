@@ -49,7 +49,7 @@ const serverData = ref({
   oldestEntryDate: '2024-06-23T02:33:45.581Z'
 })
 
-let pool = ref('https://pool.albertiprotocol.org/graphql')
+let pool = ref('https://alberti.besoeasy.com/graphql')
 
 const fetchServerInfo = async () => {
   console.log('Fetching server info : ' + pool.value)
