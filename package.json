@@ -11,8 +11,10 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@helia/unixfs": "^3.0.6",
     "axios": "^1.7.2",
     "get-ipfs-gateway": "github:besoeasy/get-ipfs-gateway",
+    "helia": "^4.2.4",
     "pinia": "^2.1.7",
     "timeago.js": "^4.0.2",
     "vue": "^3.4.29",

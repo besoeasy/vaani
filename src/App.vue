@@ -15,6 +15,8 @@ onMounted(async () => {
 
   localStorage.setItem('ipfs', gateway)
 })
+
+const pool_display = ref(localStorage.getItem('ipfs'))
 </script>
 
 <template>
@@ -26,7 +28,7 @@ onMounted(async () => {
         >
         <div class="flex items-center space-x-4">
           <div class="flex items-center space-x-4 text-sm md:space-x-8">
-            <a class="">$</a>
+            <a class="">{{ pool_display }}</a>
           </div>
         </div>
       </div>
