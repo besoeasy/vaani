@@ -8,7 +8,9 @@
       <RouterLink :to="`/post/${commit.signature}`">
         <div class="mb-4">
           <p class="text-xs font-bold text-gray-500">
-            <RouterLink :to="`/profile/${commit.address}`">{{ commit.address }}</RouterLink>
+            <RouterLink :to="`/profile/${commit.publicKey}`">{{
+              trim(commit.publicKey)
+            }}</RouterLink>
             -
             {{ format(commit.updatedAt) }}
           </p>
@@ -57,4 +59,8 @@ import { format } from 'timeago.js'
 defineProps({
   commits: Array
 })
+
+const trim = (str, length) => {
+  return str.slice(0, 4) + '***' + str.slice(-8)
+}
 </script>

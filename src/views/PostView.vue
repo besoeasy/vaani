@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="m-auto">
     <div class="flex flex-col items-center sm:px-5 md:flex-row">
       <div class="w-full md:w-1/2">
         <div v-if="commit.data.attachments && commit.data.attachments.length > 0">
@@ -43,7 +43,7 @@
           </h1>
           <p class="pt-2 text-sm font-medium">
             by
-            <RouterLink :to="`/profile/${commit.address}`">{{ commit.address }}</RouterLink>
+            <RouterLink :to="`/profile/${commit.publicKey}`">{{ commit.publicKey }}</RouterLink>
             -
             {{ format(commit.createdAt) }}
           </p>

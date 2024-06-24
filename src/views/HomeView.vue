@@ -5,15 +5,16 @@ import { format } from 'timeago.js'
 import axios from 'axios'
 
 async function getServerInfo(POOL_URL) {
-  const query = `query GetServerInfo {
-    getServerInfo {
-      difficulty
-      currentTime
-      totalEntries
-      totalAddresses
-      oldestEntryDate
-    }
-  }`
+  const query = `query ServerInfo {
+  serverInfo {
+    difficulty
+    currentTime
+    totalEntries
+    totalUsers
+    oldestEntryDate
+  }
+}
+`
 
   const variables = {}
 
@@ -35,7 +36,7 @@ async function getServerInfo(POOL_URL) {
     return null
   }
 
-  return response.data.data.getServerInfo
+  return response.data.data.serverInfo
 }
 
 const router = useRouter()
@@ -44,7 +45,7 @@ const serverData = ref({
   difficulty: 0,
   currentTime: '2024-06-23T05:53:45.740Z',
   totalEntries: 0,
-  totalAddresses: 0,
+  totalUsers: 0,
   oldestEntryDate: '2024-06-23T02:33:45.581Z'
 })
 
@@ -77,7 +78,7 @@ const connect = async () => {
         <p>Server Pinged : {{ format(serverData.currentTime) }}</p>
         <p>Oldest Entry : {{ format(serverData.oldestEntryDate) }}</p>
         <p>Total Entries: {{ serverData.totalEntries }}</p>
-        <p>Total Addresses: {{ serverData.totalAddresses }}</p>
+        <p>Total Users: {{ serverData.totalUsers }}</p>
         <p>Current Difficulty: {{ serverData.difficulty }}</p>
       </div>
     </div>
