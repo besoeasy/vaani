@@ -36,7 +36,7 @@
           <div v-for="attachment in commit.data.attachments" :key="attachment.cid" class="mb-4">
             <img
               v-if="attachment.type === 'image' && attachment.cid"
-              :src="`https://ipfs.io/ipfs/${attachment.cid}`"
+              :src="`${ipfsgateway}${attachment.cid}`"
               alt="Attachment Image"
               class="w-full rounded-lg"
             />
@@ -55,6 +55,8 @@
 
 <script setup>
 import { format } from 'timeago.js'
+
+import { ipfsgateway } from '@/config.js'
 
 defineProps({
   commits: Array

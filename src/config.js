@@ -4,6 +4,8 @@ const POOL_URL = localStorage.getItem('pool')
 
 const PER_PAGE = 3 * 8
 
+export const ipfsgateway = "https://dweb.link/ipfs/"
+
 const graphQLRequest = async (query, variables = {}) => {
   try {
     const response = await axios.post(

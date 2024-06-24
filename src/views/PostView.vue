@@ -6,7 +6,7 @@
           <div v-for="attachment in commit.data.attachments" :key="attachment.cid" class="mb-4">
             <img
               v-if="attachment.type === 'image' && attachment.cid"
-              :src="`https://ipfs.io/ipfs/${attachment.cid}`"
+              :src="`${ipfsgateway}${attachment.cid}`"
               alt="Attachment Image"
               class="w-full rounded-lg"
             />
@@ -61,6 +61,8 @@ import { format } from 'timeago.js'
 import { commitbySignature } from '@/config.js'
 
 import { useRoute } from 'vue-router'
+
+import { ipfsgateway } from '@/config.js'
 
 const route = useRoute()
 
