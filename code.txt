@@ -1,0 +1,180 @@
+<template>
+  <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
+    <!-- Sidebar -->
+    <div class="w-full sm:w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <div class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+          <span class="text-lg font-semibold text-gray-700 dark:text-gray-300">YA</span>
+        </div>
+        <div class="flex space-x-2">
+          <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </button>
+          <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="p-2">
+        <div class="relative">
+          <input 
+            type="text" 
+            placeholder="Search or start new chat" 
+            class="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-2.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+      <div class="overflow-y-auto h-[calc(100vh-130px)]">
+        <button
+          v-for="contact in contacts"
+          :key="contact.id"
+          class="w-full p-4 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
+          :class="{ 'bg-gray-100 dark:bg-gray-700': selectedChat === contact.id }"
+          @click="selectedChat = contact.id"
+        >
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+              <span class="text-lg font-semibold text-white">{{ contact.name.charAt(0) }}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{{ contact.name }}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ contact.lastMessage }}</p>
+            </div>
+            <span class="text-xs text-gray-400 dark:text-gray-500">{{ contact.time }}</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="flex-1 flex flex-col">
+      <template v-if="selectedChat">
+        <header class="p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+              <span class="text-lg font-semibold text-white">{{ selectedContact?.name.charAt(0) }}</span>
+            </div>
+            <div>
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ selectedContact?.name }}</h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Online</p>
+            </div>
+          </div>
+          <div class="flex space-x-2">
+            <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+            <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+            </button>
+            <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <div class="flex-1 overflow-y-auto p-4">
+          <div
+            v-for="message in messages"
+            :key="message.id"
+            class="flex mb-4"
+            :class="{ 'justify-end': message.sender === 'You', 'justify-start': message.sender !== 'You' }"
+          >
+            <div
+              class="max-w-[70%] p-3 rounded-lg"
+              :class="{
+                'bg-blue-500 text-white': message.sender === 'You',
+                'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100': message.sender !== 'You'
+              }"
+            >
+              <p>{{ message.content }}</p>
+              <p class="text-xs mt-1 opacity-70">{{ message.time }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+          <form @submit.prevent="sendMessage" class="flex space-x-2">
+            <input 
+              v-model="newMessage" 
+              type="text" 
+              placeholder="Type a message" 
+              class="flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+            <button 
+              type="submit"
+              class="p-2 rounded-full bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            </button>
+          </form>
+        </div>
+      </template>
+      <div v-else class="flex-1 flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+        <div class="text-center">
+          <h2 class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Welcome to NostrWhatsApp</h2>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">Select a chat to start messaging</p>
+          <button 
+            @click="startNewChat"
+            class="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+            </svg>
+            Start New Chat
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+
+const selectedChat = ref(null)
+const newMessage = ref('')
+
+const contacts = ref([
+  { id: "1", name: "Alice", lastMessage: "Hey, how's it going?", time: "10:30 AM" },
+  { id: "2", name: "Bob", lastMessage: "Did you see the latest Nostr update?", time: "Yesterday" },
+  { id: "3", name: "Carol", lastMessage: "Let's catch up soon!", time: "2 days ago" },
+])
+
+const messages = ref([
+  { id: "1", sender: "Alice", content: "Hey there! How's your Nostr experience so far?", time: "10:30 AM" },
+  { id: "2", sender: "You", content: "It's great! I love how decentralized it is.", time: "10:32 AM" },
+  { id: "3", sender: "Alice", content: "The censorship resistance is a game-changer.", time: "10:33 AM" },
+])
+
+const selectedContact = computed(() => contacts.value.find(contact => contact.id === selectedChat.value))
+
+const sendMessage = () => {
+  if (newMessage.value.trim()) {
+    messages.value.push({
+      id: Date.now().toString(),
+      sender: "You",
+      content: newMessage.value,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    })
+    newMessage.value = ''
+  }
+}
+
+const startNewChat = () => {
+  // Implement logic to start a new chat
+  console.log("Starting a new chat")
+}
+</script>
