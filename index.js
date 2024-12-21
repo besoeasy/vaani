@@ -81,13 +81,19 @@ function decryptMsg(encryptedMessage, recipientPrivateKey) {
 }
 
 // Function to create a post object
-function createPost(content, hashtags = [], attachments = [], tags = [], parent = null) {
+function createPost(
+  content,
+  hashtags = [],
+  attachments = [],
+  tags = [],
+  parent = null
+) {
   return { content, parent, hashtags, attachments, tags };
 }
 
 // Function to create meta object
-function createMeta(name, about, image, website, followed = [], hashtags = []) {
-  return { followed, hashtags, name, about, image, website };
+function createMeta(name, about, image, website, followed = []) {
+  return { followed, name, about, image, website };
 }
 
 // Function to create a commit
@@ -99,7 +105,10 @@ function createCommit(privateKey, data, type, difficulty = 3) {
     do {
       nonce++;
       messageHash = hashMsg(`${JSON.stringify(data)}${nonce}`);
-    } while (!checkDifficulty(difficulty, messageHash) || messageHash === undefined);
+    } while (
+      !checkDifficulty(difficulty, messageHash) ||
+      messageHash === undefined
+    );
 
     const signature = signMsg(privateKey, messageHash);
     const publicKey = privToPub(privateKey);
@@ -126,7 +135,13 @@ function verifyCommit(commit, difficulty = 3) {
 
 // Function to verify object structure
 function checkObject(dataObject) {
-  const requiredProperties = ["data", "publicKey", "signature", "type", "nonce"];
+  const requiredProperties = [
+    "data",
+    "publicKey",
+    "signature",
+    "type",
+    "nonce",
+  ];
 
   for (const prop of requiredProperties) {
     if (!dataObject.hasOwnProperty(prop)) {
@@ -173,17 +188,10 @@ function validateData(data, type) {
   if (type === "meta") {
     return (
       data.hasOwnProperty("followed") &&
-      data.hasOwnProperty("hashtags") &&
       data.hasOwnProperty("name") &&
       data.hasOwnProperty("about") &&
       data.hasOwnProperty("image") &&
-      data.hasOwnProperty("website") &&
-      data.hashtags.every(
-        (element) =>
-          typeof element === "string" &&
-          element.length <= 32 &&
-          /^[a-zA-Z0-9]*$/.test(element)
-      )
+      data.hasOwnProperty("website")
     );
   }
 

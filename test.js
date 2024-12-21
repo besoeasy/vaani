@@ -60,10 +60,7 @@ const {
   // Encrypt and decrypt message test
   console.log("\n=== Encrypt and Decrypt Message Test ===");
   const encryptedMessage = encryptMsg(message, publicKey);
-  const decryptedMessage = decryptMsg(
-    encryptedMessage,
-    privateKey
-  );
+  const decryptedMessage = decryptMsg(encryptedMessage, privateKey);
   assert(
     decryptedMessage === message,
     "Decrypted message should match the original message"
@@ -81,12 +78,7 @@ const {
     { key: "expireAt", value: "435345345" },
     { key: "createdAt", value: "435345345" },
   ];
-  const post = createPost(
-    postContent,
-    postHashtags,
-    postAttachments,
-    postTags
-  );
+  const post = createPost(postContent, postHashtags, postAttachments, postTags);
 
   assert(post.content === postContent, "Post content should match");
   assert.deepStrictEqual(
@@ -109,29 +101,24 @@ const {
   const metaImage = "http://example.com/image.png";
   const metaWebsite = "http://example.com";
   const metaFollowed = ["user1", "user2"];
-  const metaHashtags = ["test", "user"];
   const meta = createMeta(
     metaName,
     metaAbout,
     metaImage,
     metaWebsite,
-    metaFollowed,
-    metaHashtags
+    metaFollowed
   );
   assert(meta.name === metaName, "Meta name should match");
   assert(meta.about === metaAbout, "Meta about should match");
   assert(meta.image === metaImage, "Meta image should match");
   assert(meta.website === metaWebsite, "Meta website should match");
+
   assert.deepStrictEqual(
     meta.followed,
     metaFollowed,
     "Meta followed should match"
   );
-  assert.deepStrictEqual(
-    meta.hashtags,
-    metaHashtags,
-    "Meta hashtags should match"
-  );
+
   console.log("Meta template creation test passed");
 
   // Create and verify commit test
@@ -146,10 +133,7 @@ const {
   // Encrypt and decrypt private message test
   console.log("\n=== Encrypt and Decrypt Private Message Test ===");
   const privateMessage = "Hey love! How are you? I miss you!";
-  const encodedMsg = encryptMsg(
-    privateMessage,
-    derivedPublicKey
-  );
+  const encodedMsg = encryptMsg(privateMessage, derivedPublicKey);
   console.log("Encoded message:", encodedMsg);
   const decodedMsg = decryptMsg(encodedMsg, privateKey);
   console.log("Decoded message:", decodedMsg);
