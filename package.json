@@ -12,5 +12,9 @@
     "assert": "^2.1.0",
     "crypto-js": "^4.2.0",
     "elliptic": "^6.6.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/besoeasy/vaani.git"
   }
 }
