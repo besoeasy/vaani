@@ -10,12 +10,8 @@ const {
   postTemplate,
   metaTemplate,
   createCommit,
-  verifyCommit, 
+  verifyCommit,
 } = require("./index");
-
-
-// post data to gunJS
-
 
 async function main() {
   const { privateKey, publicKey } = generateKeyPair();
