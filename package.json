@@ -1,6 +1,6 @@
 {
   "name": "vaani",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Vaani is a peer-to-peer (P2P) communication framework inspired by Nostr. Unlike traditional centralized platforms, Vaani aims to facilitate truly decentralized and uniform implementation of secure communication protocols. With a focus on simplicity and interoperability, it enables users to exchange messages and data seamlessly while ensuring privacy and security.",
   "main": "index.js",
   "scripts": {

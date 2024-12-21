@@ -1,9 +1,25 @@
-const CryptoJS = require("crypto-js");
-const EC = require("elliptic").ec;
+// Use a polyfill for the 'crypto' module in browsers
+const isBrowser = typeof window !== "undefined";
+
+// Polyfill Buffer in the browser if necessary
+if (isBrowser && typeof Buffer === "undefined") {
+  window.Buffer = require("buffer").Buffer;
+}
+
+// Import necessary modules based on the environment
+let CryptoJS, EC;
+if (isBrowser) {
+  CryptoJS = require("crypto-js");
+  EC = require("elliptic").ec;
+} else {
+  CryptoJS = require("crypto-js");
+  EC = require("elliptic").ec;
+}
+
 const curve = new EC("p521");
 
 // Function to generate a new key pair with compressed public key
-function generateKeyPair() {
+function genKeys() {
   const keyPair = curve.genKeyPair();
   const privateKey = keyPair.getPrivate("hex");
   const publicKey = keyPair.getPublic(true, "hex"); // true for compressed
@@ -11,13 +27,13 @@ function generateKeyPair() {
 }
 
 // Function to convert private key to public key
-function privateKeyToPublicKey(privateKey) {
+function privToPub(privateKey) {
   const keyPair = curve.keyFromPrivate(privateKey, "hex");
   return keyPair.getPublic(true, "hex"); // true for compressed
 }
 
 // Function to sign a message
-function signMessage(privateKeyHex, message) {
+function signMsg(privateKeyHex, message) {
   const privateKey = curve.keyFromPrivate(privateKeyHex, "hex");
   const messageBuffer = Buffer.from(message, "utf-8");
   const signature = privateKey.sign(messageBuffer);
@@ -25,7 +41,7 @@ function signMessage(privateKeyHex, message) {
 }
 
 // Function to verify a message against a signature
-function verifySignature(publicKeyHex, message, signatureHex) {
+function verifySig(publicKeyHex, message, signatureHex) {
   const publicKey = curve.keyFromPublic(publicKeyHex, "hex");
   const messageBuffer = Buffer.from(message, "utf-8");
   const signature = Buffer.from(signatureHex, "hex");
@@ -33,17 +49,17 @@ function verifySignature(publicKeyHex, message, signatureHex) {
 }
 
 // Function to verify difficulty
-function difficultyverify(difficulty, hash) {
+function checkDifficulty(difficulty, hash) {
   return hash.startsWith("0".repeat(difficulty));
 }
 
 // Function to hash a message
-function hashMessage(message) {
+function hashMsg(message) {
   return CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex);
 }
 
 // Function to encrypt a message with a public key
-function encryptMessageWithPublicKey(message, recipientPublicKey) {
+function encryptMsg(message, recipientPublicKey) {
   const recipientKey = curve.keyFromPublic(recipientPublicKey, "hex");
   const ephemeralKey = curve.genKeyPair();
   const sharedSecret = ephemeralKey.derive(recipientKey.getPublic());
@@ -54,7 +70,7 @@ function encryptMessageWithPublicKey(message, recipientPublicKey) {
 }
 
 // Function to decrypt a message with a private key
-function decryptMessageWithPrivateKey(encryptedMessage, recipientPrivateKey) {
+function decryptMsg(encryptedMessage, recipientPrivateKey) {
   const { ciphertext, ephemeralPublicKey } = encryptedMessage;
   const recipientKey = curve.keyFromPrivate(recipientPrivateKey, "hex");
   const ephemeralKey = curve.keyFromPublic(ephemeralPublicKey, "hex");
@@ -64,40 +80,17 @@ function decryptMessageWithPrivateKey(encryptedMessage, recipientPrivateKey) {
   return bytes.toString(CryptoJS.enc.Utf8);
 }
 
-function postTemplate(
-  content,
-  hashtags = [],
-  attachments = [],
-  tags = [],
-  parent = null
-) {
-  return {
-    content: content,
-    parent: parent,
-    hashtags: hashtags,
-    attachments: attachments,
-    tags: tags,
-  };
+// Function to create a post object
+function createPost(content, hashtags = [], attachments = [], tags = [], parent = null) {
+  return { content, parent, hashtags, attachments, tags };
 }
 
-function metaTemplate(
-  name,
-  about,
-  image,
-  website,
-  followed = [],
-  hashtags = []
-) {
-  return {
-    followed,
-    hashtags,
-    name,
-    about,
-    image,
-    website,
-  };
+// Function to create meta object
+function createMeta(name, about, image, website, followed = [], hashtags = []) {
+  return { followed, hashtags, name, about, image, website };
 }
 
+// Function to create a commit
 function createCommit(privateKey, data, type, difficulty = 3) {
   try {
     let nonce = 0;
@@ -105,14 +98,11 @@ function createCommit(privateKey, data, type, difficulty = 3) {
 
     do {
       nonce++;
-      messageHash = hashMessage(`${JSON.stringify(data)}${nonce}`);
-    } while (
-      !difficultyverify(difficulty, messageHash) ||
-      messageHash === undefined
-    );
+      messageHash = hashMsg(`${JSON.stringify(data)}${nonce}`);
+    } while (!checkDifficulty(difficulty, messageHash) || messageHash === undefined);
 
-    const signature = signMessage(privateKey, messageHash);
-    const publicKey = privateKeyToPublicKey(privateKey);
+    const signature = signMsg(privateKey, messageHash);
+    const publicKey = privToPub(privateKey);
 
     return { data, type, nonce, publicKey, signature };
   } catch (error) {
@@ -121,26 +111,22 @@ function createCommit(privateKey, data, type, difficulty = 3) {
   }
 }
 
+// Function to verify a commit
 function verifyCommit(commit, difficulty = 3) {
-  if (!verifyObject(commit)) {
+  if (!checkObject(commit)) {
     return false;
   }
 
   const { data, nonce, publicKey, signature } = commit;
-  const messageHash = hashMessage(`${JSON.stringify(data)}${nonce}`);
-  const isValidSignature = verifySignature(publicKey, messageHash, signature);
-  const isValidDifficulty = difficultyverify(difficulty, messageHash);
+  const messageHash = hashMsg(`${JSON.stringify(data)}${nonce}`);
+  const isValidSignature = verifySig(publicKey, messageHash, signature);
+  const isValidDifficulty = checkDifficulty(difficulty, messageHash);
   return isValidSignature && isValidDifficulty;
 }
 
-function verifyObject(dataObject) {
-  const requiredProperties = [
-    "data",
-    "publicKey",
-    "signature",
-    "type",
-    "nonce",
-  ];
+// Function to verify object structure
+function checkObject(dataObject) {
+  const requiredProperties = ["data", "publicKey", "signature", "type", "nonce"];
 
   for (const prop of requiredProperties) {
     if (!dataObject.hasOwnProperty(prop)) {
@@ -148,10 +134,11 @@ function verifyObject(dataObject) {
     }
   }
 
-  return checkDataStructure(dataObject.data, dataObject.type);
+  return validateData(dataObject.data, dataObject.type);
 }
 
-function checkDataStructure(data, type) {
+// Function to validate data structure
+function validateData(data, type) {
   if (type === "post") {
     return (
       data.hasOwnProperty("parent") &&
@@ -208,16 +195,16 @@ function checkDataStructure(data, type) {
 }
 
 module.exports = {
-  generateKeyPair,
-  privateKeyToPublicKey,
-  signMessage,
-  verifySignature,
-  difficultyverify,
-  hashMessage,
-  encryptMessageWithPublicKey,
-  decryptMessageWithPrivateKey,
-  postTemplate,
-  metaTemplate,
+  genKeys,
+  privToPub,
+  signMsg,
+  verifySig,
+  checkDifficulty,
+  hashMsg,
+  encryptMsg,
+  decryptMsg,
+  createPost,
+  createMeta,
   createCommit,
   verifyCommit,
 };

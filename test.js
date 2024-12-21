@@ -1,16 +1,16 @@
 const assert = require("assert");
 
 const {
-  generateKeyPair,
-  privateKeyToPublicKey,
-  signMessage,
-  verifySignature,
-  difficultyverify,
-  hashMessage,
-  encryptMessageWithPublicKey,
-  decryptMessageWithPrivateKey,
-  postTemplate,
-  metaTemplate,
+  genKeys,
+  privToPub,
+  signMsg,
+  verifySig,
+  checkDifficulty,
+  hashMsg,
+  encryptMsg,
+  decryptMsg,
+  createPost,
+  createMeta,
   createCommit,
   verifyCommit,
 } = require("./index");
@@ -21,14 +21,14 @@ const {
 
   // Key generation test
   console.log("\n=== Key Generation Test ===");
-  const { privateKey, publicKey } = generateKeyPair();
+  const { privateKey, publicKey } = genKeys();
   assert(privateKey, "Private key should be generated");
   assert(publicKey, "Public key should be generated");
   console.log("Key pair generation test passed");
 
   // Private key to public key conversion test
   console.log("\n=== Private Key to Public Key Conversion Test ===");
-  const derivedPublicKey = privateKeyToPublicKey(privateKey);
+  const derivedPublicKey = privToPub(privateKey);
   assert(
     derivedPublicKey === publicKey,
     "Derived public key should match the generated public key"
@@ -38,8 +38,8 @@ const {
   // Sign and verify message test
   console.log("\n=== Sign and Verify Message Test ===");
   const message = "Hello, world!";
-  const signature = signMessage(privateKey, message);
-  const isValidSignature = verifySignature(publicKey, message, signature);
+  const signature = signMsg(privateKey, message);
+  const isValidSignature = verifySig(publicKey, message, signature);
   assert(isValidSignature, "Signature should be valid");
   console.log("Sign and verify message test passed");
 
@@ -47,20 +47,20 @@ const {
   console.log("\n=== Difficulty Verification Test ===");
   const hash = "0000abcdef";
   const difficulty = 4;
-  const isDifficultyValid = difficultyverify(difficulty, hash);
-  assert(isDifficultyValid, "Difficulty should be verified correctly");
+  const isValidDifficulty = checkDifficulty(difficulty, hash);
+  assert(isValidDifficulty, "Difficulty should be verified correctly");
   console.log("Difficulty verification test passed");
 
   // Hash message test
   console.log("\n=== Hash Message Test ===");
-  const messageHash = hashMessage(message);
+  const messageHash = hashMsg(message);
   assert(messageHash.length === 64, "Hash length should be 64 characters");
   console.log("Hash message test passed");
 
   // Encrypt and decrypt message test
   console.log("\n=== Encrypt and Decrypt Message Test ===");
-  const encryptedMessage = encryptMessageWithPublicKey(message, publicKey);
-  const decryptedMessage = decryptMessageWithPrivateKey(
+  const encryptedMessage = encryptMsg(message, publicKey);
+  const decryptedMessage = decryptMsg(
     encryptedMessage,
     privateKey
   );
@@ -81,7 +81,7 @@ const {
     { key: "expireAt", value: "435345345" },
     { key: "createdAt", value: "435345345" },
   ];
-  const post = postTemplate(
+  const post = createPost(
     postContent,
     postHashtags,
     postAttachments,
@@ -110,7 +110,7 @@ const {
   const metaWebsite = "http://example.com";
   const metaFollowed = ["user1", "user2"];
   const metaHashtags = ["test", "user"];
-  const meta = metaTemplate(
+  const meta = createMeta(
     metaName,
     metaAbout,
     metaImage,
@@ -136,7 +136,7 @@ const {
 
   // Create and verify commit test
   console.log("\n=== Create and Verify Commit Test ===");
-  const postData = postTemplate("Hello, world!", [], [], []);
+  const postData = createPost("Hello, world!", [], [], []);
   const commitData = createCommit(privateKey, postData, "post", 4);
   console.log("Generated commit:", commitData);
   const isValidCommit = verifyCommit(commitData, 4);
@@ -146,12 +146,12 @@ const {
   // Encrypt and decrypt private message test
   console.log("\n=== Encrypt and Decrypt Private Message Test ===");
   const privateMessage = "Hey love! How are you? I miss you!";
-  const encodedMsg = encryptMessageWithPublicKey(
+  const encodedMsg = encryptMsg(
     privateMessage,
     derivedPublicKey
   );
   console.log("Encoded message:", encodedMsg);
-  const decodedMsg = decryptMessageWithPrivateKey(encodedMsg, privateKey);
+  const decodedMsg = decryptMsg(encodedMsg, privateKey);
   console.log("Decoded message:", decodedMsg);
   assert(
     decodedMsg === privateMessage,

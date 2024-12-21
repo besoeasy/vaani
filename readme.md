@@ -20,7 +20,7 @@ Vaani is a peer-to-peer (P2P) communication framework inspired by Nostr. Unlike 
 ```javascript
 // Message Section
 const message = "Hey Sir, how are you doing today?";
-const encryptedMessage = encryptMessageWithPublicKey(message, publicKey);
+const encryptedMessage = encryptMsg(message, publicKey);
 const cmt = createCommit(privateKey, encryptedMessage, "message", 2);
 
 // Post Section
@@ -33,7 +33,7 @@ const postTags = [
   { key: "expireAt", value: "435345345" },
   { key: "createdAt", value: "435345345" },
 ];
-const post = postTemplate(postContent, postHashtags, postAttachments, postTags);
+const post = createPost(postContent, postHashtags, postAttachments, postTags);
 const cmtPost = createCommit(privateKey, post, "post", 2);
 
 // Meta User Section
@@ -43,7 +43,14 @@ const metaImage = "http://example.com/image.png";
 const metaWebsite = "http://example.com";
 const metaFollowed = ["user1", "user2"];
 const metaHashtags = ["test", "user"];
-const meta = metaTemplate(metaName, metaAbout, metaImage, metaWebsite, metaFollowed, metaHashtags);
+const meta = createMeta(
+  metaName,
+  metaAbout,
+  metaImage,
+  metaWebsite,
+  metaFollowed,
+  metaHashtags
+);
 const cmtMeta = createCommit(privateKey, meta, "meta", 2);
 ```
 
@@ -66,4 +73,3 @@ While Nostr has pioneered decentralized communication, it faces challenges that 
 - **Overextension**: By attempting to integrate Bitcoin Lightning, Cashu, and other functionalities, Nostr spreads itself too thin, detracting from its primary goal of effective communication.
 
 Vaani focuses on simplicity and consistency, ensuring a protocol that does one thing exceptionally well—secure, decentralized communication.
-
