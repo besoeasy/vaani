@@ -1,0 +1,16 @@
+{
+  "name": "vaani",
+  "version": "1.0.0",
+  "description": "Vaani is protocol for p2p communication ",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "besoeasy",
+  "license": "ISC",
+  "dependencies": {
+    "assert": "^2.1.0",
+    "crypto-js": "^4.2.0",
+    "elliptic": "^6.6.1"
+  }
+}

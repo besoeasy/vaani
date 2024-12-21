@@ -64,18 +64,33 @@ function decryptMessageWithPrivateKey(encryptedMessage, recipientPrivateKey) {
   return bytes.toString(CryptoJS.enc.Utf8);
 }
 
-function postTemplate(content, attachments = [], tags = [], parent = null) {
+function postTemplate(
+  content,
+  hashtags = [],
+  attachments = [],
+  tags = [],
+  parent = null
+) {
   return {
     content: content,
     parent: parent,
+    hashtags: hashtags,
     attachments: attachments,
     tags: tags,
   };
 }
 
-function metaTemplate(name, about, image, website, followed = []) {
+function metaTemplate(
+  name,
+  about,
+  image,
+  website,
+  followed = [],
+  hashtags = []
+) {
   return {
     followed,
+    hashtags,
     name,
     about,
     image,
@@ -141,8 +156,15 @@ function checkDataStructure(data, type) {
     return (
       data.hasOwnProperty("parent") &&
       data.hasOwnProperty("content") &&
+      data.hasOwnProperty("hashtags") &&
       data.hasOwnProperty("attachments") &&
       data.hasOwnProperty("tags") &&
+      data.hashtags.every(
+        (element) =>
+          typeof element === "string" &&
+          element.length <= 32 &&
+          /^[a-zA-Z0-9]*$/.test(element)
+      ) &&
       data.attachments.every(
         (element) =>
           element.hasOwnProperty("type") &&
@@ -164,10 +186,17 @@ function checkDataStructure(data, type) {
   if (type === "meta") {
     return (
       data.hasOwnProperty("followed") &&
+      data.hasOwnProperty("hashtags") &&
       data.hasOwnProperty("name") &&
       data.hasOwnProperty("about") &&
       data.hasOwnProperty("image") &&
-      data.hasOwnProperty("website")
+      data.hasOwnProperty("website") &&
+      data.hashtags.every(
+        (element) =>
+          typeof element === "string" &&
+          element.length <= 32 &&
+          /^[a-zA-Z0-9]*$/.test(element)
+      )
     );
   }
 
