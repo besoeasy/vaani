@@ -1,4 +1,5 @@
 const assert = require("assert");
+
 const {
   generateKeyPair,
   privateKeyToPublicKey,
@@ -73,12 +74,31 @@ const {
   console.log("\n=== Post Template Creation Test ===");
   const postContent = "This is a test post.";
   const postHashtags = ["test", "post"];
-  const postAttachments = [{ type: "image", url: "http://example.com/image.png" }];
-  const postTags = [{ key: "expireAt", value: "435345345" }, { key: "createdAt", value: "435345345" }];
-  const post = postTemplate(postContent, postHashtags, postAttachments, postTags);
+  const postAttachments = [
+    { type: "image", url: "http://example.com/image.png" },
+  ];
+  const postTags = [
+    { key: "expireAt", value: "435345345" },
+    { key: "createdAt", value: "435345345" },
+  ];
+  const post = postTemplate(
+    postContent,
+    postHashtags,
+    postAttachments,
+    postTags
+  );
+
   assert(post.content === postContent, "Post content should match");
-  assert.deepStrictEqual(post.hashtags, postHashtags, "Post hashtags should match");
-  assert.deepStrictEqual(post.attachments, postAttachments, "Post attachments should match");
+  assert.deepStrictEqual(
+    post.hashtags,
+    postHashtags,
+    "Post hashtags should match"
+  );
+  assert.deepStrictEqual(
+    post.attachments,
+    postAttachments,
+    "Post attachments should match"
+  );
   assert.deepStrictEqual(post.tags, postTags, "Post tags should match");
   console.log("Post template creation test passed");
 
@@ -102,8 +122,16 @@ const {
   assert(meta.about === metaAbout, "Meta about should match");
   assert(meta.image === metaImage, "Meta image should match");
   assert(meta.website === metaWebsite, "Meta website should match");
-  assert.deepStrictEqual(meta.followed, metaFollowed, "Meta followed should match");
-  assert.deepStrictEqual(meta.hashtags, metaHashtags, "Meta hashtags should match");
+  assert.deepStrictEqual(
+    meta.followed,
+    metaFollowed,
+    "Meta followed should match"
+  );
+  assert.deepStrictEqual(
+    meta.hashtags,
+    metaHashtags,
+    "Meta hashtags should match"
+  );
   console.log("Meta template creation test passed");
 
   // Create and verify commit test
@@ -118,13 +146,18 @@ const {
   // Encrypt and decrypt private message test
   console.log("\n=== Encrypt and Decrypt Private Message Test ===");
   const privateMessage = "Hey love! How are you? I miss you!";
-  const encodedMsg = encryptMessageWithPublicKey(privateMessage, derivedPublicKey);
+  const encodedMsg = encryptMessageWithPublicKey(
+    privateMessage,
+    derivedPublicKey
+  );
   console.log("Encoded message:", encodedMsg);
   const decodedMsg = decryptMessageWithPrivateKey(encodedMsg, privateKey);
   console.log("Decoded message:", decodedMsg);
-  assert(decodedMsg === privateMessage, "Decrypted message should match the original message");
+  assert(
+    decodedMsg === privateMessage,
+    "Decrypted message should match the original message"
+  );
   console.log("Encrypt and decrypt private message test passed");
 
   console.log("\nAll tests passed successfully!");
-
 })();
