@@ -61,8 +61,8 @@ const metaName = "Test User"; // User's name
 const metaAbout = "This is a test user."; // Short description about the user
 const metaImage = "http://example.com/image.png"; // URL to the user's profile image
 const metaWebsite = "http://example.com"; // User's personal or professional website
-const metaFollowed = ["user1", "user2"]; // List of usernames the user follows
-const metaHashtags = ["test", "user"]; // Hashtags associated with the user
+const metaFollowed = ["user1", "user2"]; // List of publicKeys the user follows
+const metaHashtags = ["test", "user"]; // List of Hashtags the user follows
 
 // Generate the metadata object using a predefined template
 const meta = metaTemplate(
@@ -79,8 +79,7 @@ const meta = metaTemplate(
 const cmt = createCommit(privateKey, meta, "meta", 2);
 ```
 
-
-    Now you can relay cmt to anywhere 
+Now you can relay cmt to anywhere 
 
 ## Acknowledgments
 
