@@ -54,7 +54,26 @@ const meta = createMeta(
 const cmtMeta = createCommit(privateKey, meta, "meta", 2);
 ```
 
-Now you can relay `cmt` to any supported P2P network.
+Now you can relay `cmt` to any supported P2P network. A simple example would be use GUN JS 
+
+```javascript
+import Gun from "gun";
+import "gun/sea";
+
+const gun = Gun();
+
+export async function putCommit(commit) {
+  return new Promise((resolve, reject) => {
+    gun.get("vaani").get(`cmt_${Date.now()}`).put(JSON.stringify(commit), (ack) => {
+      ack?.ok
+        ? resolve({ success: true, key: commitKey })
+        : reject({ success: false, error: ack?.err || "Failed to store commit" });
+    });
+  });
+}
+
+```
+
 
 ---
 
