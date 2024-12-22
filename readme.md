@@ -62,7 +62,7 @@ import "gun/sea";
 
 const gun = Gun();
 
-export async function putCommit(commit) {
+async function putCommit(commit) {
   return new Promise((resolve, reject) => {
     gun.get("vaani").get(`cmt_${Date.now()}`).put(JSON.stringify(commit), (ack) => {
       ack?.ok
