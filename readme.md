@@ -66,7 +66,7 @@ async function putCommit(commit) {
   return new Promise((resolve, reject) => {
     gun.get("vaani").get(`cmt_${Date.now()}`).put(JSON.stringify(commit), (ack) => {
       ack?.ok
-        ? resolve({ success: true, key: commitKey })
+        ? resolve({ success: true })
         : reject({ success: false, error: ack?.err || "Failed to store commit" });
     });
   });
